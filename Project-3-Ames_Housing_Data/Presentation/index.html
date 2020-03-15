@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+						<h1>Project 3</h1>
+						<br><br><br>
+						<h3>Ames Housing Data</h3>
+						<p><em>by</em></p>
+					  <p>Mark Anthony Duero</p>
+				</section>
+
+				<section data-transition="zoom">
+
+						<section>
+							<h5>Estimating the value of homes from fixed characteristics</h5>
+						</section>
+
+						<section>
+							<h2>Data Preparation & Cleaning</h2>
+							<br>
+							<p><em># Load the data</em></p>
+							<p>house = pd.read_csv('./housing.csv')</p>
+							<br>
+							<p>house.shape</p>
+							<p>(1441, 80)</p>
+						</section>
+
+						<section>
+							<h5 ALIGN=LEFT>Extend rows and columns</h5>
+							<br>
+								<li ALIGN=LEFT>pd.options.display.max_columns = 999</li>
+								<li ALIGN=LEFT>pd.options.display.max_rows = 999</li>
+							<br>
+							<h5 ALIGN=LEFT>Added comma and set 2 decimal points</h5>
+							<br>
+								<li ALIGN=LEFT>pd.options.display.float_format = '{:,.2f}'.format</li>
+						</section>
+
+						<section>
+							<h5 ALIGN=LEFT>Drop unwanted rows and columns</h5>
+							<br>
+								<li ALIGN=LEFT><font size="6">house.drop(columns='Id',inplace=True, axis=1)</font></li>
+								<li ALIGN=LEFT><font size="6">house.drop(index=house.loc[house.MSZoning == 'C (all)'].index,inplace=True)</font></li>
+								<li ALIGN=LEFT><font size="6">house.drop(index=1379,inplace=True) #Drop electrical with null value</font></li>
+								<li ALIGN=LEFT><font size="6">house.drop(index=house.loc[house.MasVnrType.isnull() == True].index,inplace=True)</font></li>
+						</section>
+
+						<section>
+							<h3 ALIGN=LEFT>Data Cleaning...</h3>
+							<br>
+								<li ALIGN=LEFT><font size="6">house['GarageCond'] = house.GarageCond.fillna(value='NA')</font></li>
+								<li ALIGN=LEFT><font size="6">house['LotFrontage'] = house.groupby('Neighborhood')['LotFrontage'].transform(lambda x: x.fillna(x.median()))</font></li>
+								<li ALIGN=LEFT><font size="6">house['GarageYrBlt'].fillna(value=house['GarageYrBlt'].mean(),inplace=True)</font></li>
+								<li ALIGN=LEFT><font size="6">house['MasVnrArea'].fillna(value=house['MasVnrArea'].mean(),inplace=True)</font></li>
+								<li ALIGN=LEFT><font size="6">house['Neighborhood'] = LabelEncoder().fit_transform(house['Neighborhood'])</font></li>
+						</section>
+
+						<section>
+							<h2>Training</h2>
+							<p>Linear Regression</p>
+							<img src="/images/training.jpg" alt="Linear Regression">
+						</section>
+
+						<section>
+							<p>Lasso & Ridge</p>
+							<img src="/images/training2.jpg" alt="Lasso & Ridge">
+						</section>
+
+						<section>
+							<img src="/images/model.jpg" alt="Model">
+						</section>
+
+						<section>
+							<h2>Actual vs Predict</h2>
+							<p>Prediction of SalePrice with Fix features</p>
+							<img src="/images/ap.jpg" alt="Actual vs Predict">
+						</section>
+				</section>
+
+				<section>
+
+					<section>
+					<h5>Changeable property characteristics unexplained by the fixed ones</h5>
+					</section>
+
+					<section>
+						<li ALIGN=LEFT>EDA</li>
+						<li ALIGN=LEFT>Train</li>
+						<li ALIGN=LEFT>Model</li>
+						<li ALIGN=LEFT>Prediction</li>
+					</section>
+
+					<section>
+						<h2>Effect in dollars</h2>
+						<p>Cost of Renovation</p>
+						<img src="/images/cost_effect.jpg" alt="Cost of Renovation">
+					</section>
+
+					<section>
+						<h2>Features and Coefficient</h2>
+						<img src="/images/fc.jpg" alt="Features and Coefficient" width="400" height="500">
+					</section>
+
+				</section>
+
+				<section>
+
+					<section>
+					<h5>Characteristics that predict an "abnormal" sale</h5>
+					</section>
+
+					<section>
+						<li ALIGN=LEFT>MinMaxScaler()</li>
+						<li ALIGN=LEFT>StratifiedKFold()</li>
+						<li ALIGN=LEFT>XGBClassifier()</li>
+						<li ALIGN=LEFT>Train/Test</li>
+						<li ALIGN=LEFT>Model/Predict</li>
+					</section>
+
+					<section>
+						<h2>Confusion Matrix</h2>
+						<img src="/images/conf.jpg" alt="Confusion Matrix">
+					</section>
+
+				</section>
+
+				<section>
+					<iframe src="https://gifer.com/embed/sEU" width=480 height=348.000 frameBorder="0" allowFullScreen></iframe><p><a href="https://gifer.com">Any Questions?</a></p>
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
